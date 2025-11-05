@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { groq } from '@/lib/groq'
+import { getGroq } from '@/lib/groq'
 
 export async function POST(req: Request){
   try{
@@ -15,6 +15,7 @@ export async function POST(req: Request){
 - Simple bookkeeping reminders
 Keep it short, bullet points, local examples (Nigeria/Ghana).`
 
+    const groq = getGroq()
     const completion = await groq.chat.completions.create({
       model: 'llama-3.1-8b-instant',
       temperature: 0.4,

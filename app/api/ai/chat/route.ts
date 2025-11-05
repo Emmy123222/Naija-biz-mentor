@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { groq } from '@/lib/groq'
+import { getGroq } from '@/lib/groq'
 
 const SYSTEM_PROMPT = `You are a Nigerian/African business mentor AI. You help small business owners grow with simple language, practical advice, and local examples.
 Provide: pricing suggestions, sales tips, social media content ideas, bookkeeping reminders, fraud warnings, resource recommendations. Focus on real African markets: food, fashion, POS, logistics, mini-importation, crypto (with risk warnings), cosmetics, tech services, phone accessories. Be friendly, motivating, and practical.`
@@ -13,6 +13,7 @@ export async function POST(req: Request){
       return NextResponse.json({ error: 'Invalid body. Expected { messages: Array<{role, content} > }' }, { status: 400 })
     }
     const { messages } = body
+    const groq = getGroq()
     const completion = await groq.chat.completions.create({
       model: 'llama-3.1-8b-instant',
       temperature: 0.4,

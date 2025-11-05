@@ -1,16 +1,19 @@
 import { cookies } from 'next/headers'
-import { createServerClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@supabase/supabase-js'
 
 export function createServerSupabase(){
   const cookieStore = cookies()
-  return createServerClient(
+  return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      cookies: {
-        get(name: string) { return cookieStore.get(name)?.value },
-        set() {},
-        remove() {},
+      auth: {
+        persistSession: false,
+      },
+      global: {
+        headers: {
+          cookie: cookieStore.getAll().map(c => `${c.name}=${c.value}`).join('; '),
+        },
       },
     }
   )

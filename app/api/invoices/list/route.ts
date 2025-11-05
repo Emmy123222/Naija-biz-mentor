@@ -10,6 +10,7 @@ export async function GET(){
     const { data, error } = await supabase
       .from('invoices')
       .select('id, customer_name, currency, date, subtotal')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
 
     if(error) throw error
