@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@supabase/supabase-js'
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
@@ -8,7 +8,19 @@ export async function middleware(req: NextRequest) {
   if (!hasEnv) {
     return res
   }
-  const supabase = createMiddlewareClient({ req, res })
+
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      global: {
+        headers: {
+          cookie: req.headers.get('cookie') || '',
+        },
+      },
+    }
+  )
+
   const {
     data: { user },
   } = await supabase.auth.getUser()
